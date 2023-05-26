@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("orders")
+@RequestMapping("/orders")
 public class OrderController {
     @Autowired
     OrderService service;
@@ -46,7 +46,7 @@ public class OrderController {
             return new ResponseEntity<>("Entities not matching",HttpStatus.BAD_REQUEST);
         }
 
-        //This is basically assigning that order to that partnerId
+
 
     }
 

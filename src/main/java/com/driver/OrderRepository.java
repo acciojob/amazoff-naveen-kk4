@@ -20,7 +20,7 @@ public class OrderRepository {
 
     public void addPartner(DeliveryPartner a) {
         partners.put(a.getId(),a);
-        collections1.put(a.getId(),new ArrayList<>());
+
 
     }
 
@@ -33,13 +33,15 @@ public class OrderRepository {
     }
 
     public void addPair(String partnerId, String orderId) {
-        collections1.get(partnerId).add(orderId);
+        List<String> list = collections1.getOrDefault(partnerId,new ArrayList<>());
+        list.add(orderId);
+        collections1.put(partnerId,list);
         collections2.put(orderId,partnerId);
 
     }
 
     public List<String> getOrdersByPartnerId(String partnerId) {
-        return new ArrayList<>(collections1.get(partnerId));
+        return collections1.getOrDefault(partnerId,new ArrayList<>());
     }
 
     public List<String> getAllOrders() {

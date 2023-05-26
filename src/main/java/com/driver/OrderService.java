@@ -65,36 +65,17 @@ public class OrderService {
         return dao.getCountOfUnassignedOrders();
     }
 
-    public Integer getOrdersLeftAfterGivenTimeByPartnerId(String time, String partnerId) throws NotFoundException {
+    public Integer getOrdersLeftAfterGivenTimeByPartnerId(String t, String partnerId) throws NotFoundException {
         Optional<DeliveryPartner> partner = dao.getPartner(partnerId);
         if(partner.isEmpty())throw new NotFoundException("the requested entity is not found");
-        String a = "";
-        String b = "";
-        boolean found = false;
-        for(int i = 0;i<time.length();i++){
-            char ch = time.charAt(i);
-            if(ch==':'){
-                found = true;
-                continue;
-            }
-            if(!found)a+=ch;
-            else b+=ch;
-
-        }
-        int time1 = (Integer.valueOf(a)*60) + Integer.valueOf(b);
-        int count = 0;
-        List<String> orders = getOrdersByPartnerId(partnerId);
-        for(String order : orders){
-            Optional<Order> curr = dao.getOrder(order);
-            if(curr.isPresent()){
-                Order c = curr.get();
-               int currTime = c.getDeliveryTime();
-               if(currTime>time1)count++;
-
-            }
-
-        }
-        return count;
+       int time1 = time.getTime(t);
+       List<String> list = dao.getOrdersByPartnerId(partnerId);
+       int count = 0;
+       for(String str : list){
+           Optional<Order> e = dao.getOrder(str);
+           if(!e.isEmpty() && e.get().getDeliveryTime() > time1 )count++;
+       }
+       return count;
 
     }
 
@@ -106,23 +87,19 @@ public class OrderService {
         for(String order : orders){
             Optional<Order> curr = dao.getOrder(order);
             if(curr.isPresent()){
-                Order c = curr.get();
-                int currTime = c.getDeliveryTime();
+                int currTime = curr.get().getDeliveryTime();
                 max = Math.max(max,currTime);
 
             }
 
         }
-        String a = String.valueOf(max/60);
-        String b = String.valueOf(max%60);
-        return a+":"+b;
+        return max==0?"0":time.getTime(max);
+
 
     }
 
     public void deletePartnerById(String partnerId) throws NotFoundException{
-        Optional<DeliveryPartner> partner = dao.getPartner(partnerId);
-        if(partner.isEmpty())throw new NotFoundException("the requested entity is not found");
-        List<String> orders = getOrdersByPartnerId(partnerId);
+        List<String> orders = this.getOrdersByPartnerId(partnerId);
         for(String order : orders){
             dao.removeFromCollections2(order);
         }
@@ -133,13 +110,16 @@ public class OrderService {
 
     public void deleteOrderById(String orderId) {
         Optional<Order> order = dao.getOrder(orderId);
+        if(order.isEmpty())throw new NotFoundException("the requested entity is not found");
+
         Optional<String> partner = dao.getPartnerOfOrder(orderId);
-        if(order.isEmpty() || partner.isEmpty())throw new NotFoundException("the requested entity is not found");
-        dao.removeOrderFromCollection1(partner.get(),orderId);
+        if(partner.isEmpty())throw new NotFoundException("the requested entity is not found");
         dao.removeFromCollections2(orderId);
+        dao.removeOrderFromCollection1(partner.get(), orderId);
         Optional<DeliveryPartner> partner2 = dao.getPartner(partner.get());
         DeliveryPartner partner3 = partner2.get();
-        partner3.setNumberOfOrders(partner3.getNumberOfOrders()-1);
+        partner3.setNumberOfOrders(partner3.getNumberOfOrders() - 1);
+
 
 
     }
