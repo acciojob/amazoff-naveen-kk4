@@ -6,10 +6,23 @@ public class Order {
     private int deliveryTime;
 
     public Order(String id, String deliveryTime) {
+        this.id=id;
+        String a = "";
+        String b = "";
+        boolean found = false;
+        for(int i = 0;i<deliveryTime.length();i++){
+            char ch = deliveryTime.charAt(i);
+            if(ch==':'){
+                found = true;
+                continue;
+            }
+            if(!found)a+=ch;
+            else b+=ch;
 
-        // The deliveryTime has to converted from string to int and then stored in the attribute
-        //deliveryTime  = HH*60 + MM
-    }
+        }
+        this.deliveryTime=(Integer.valueOf(a)*60) + Integer.valueOf(b);
+
+           }
 
     public String getId() {
         return id;
