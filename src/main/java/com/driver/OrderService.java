@@ -9,8 +9,8 @@ import java.util.Optional;
 @Service
 public class OrderService {
 
-    @Autowired
-    OrderRepository dao;
+
+    OrderRepository dao = new OrderRepository();
 
     public void addOrder(Order order) {
         dao.addOrder(order);
