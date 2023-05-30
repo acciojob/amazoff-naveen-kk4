@@ -18,6 +18,7 @@ public class Order {
     }
 
     public int getDeliveryTime() {return deliveryTime1;}
+    public String getDeliveryTime2(){return deliveryTime2;}
 
 
 }

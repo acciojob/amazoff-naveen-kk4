@@ -84,16 +84,20 @@ public class OrderService {
         if(partner.isEmpty())throw new NotFoundException("the requested entity is not found");
         List<String> orders = getOrdersByPartnerId(partnerId);
         int max = 0;
+        String ans = null;
         for(String order : orders){
             Optional<Order> curr = dao.getOrder(order);
             if(curr.isPresent()){
                 int currTime = curr.get().getDeliveryTime();
-                max = Math.max(max,currTime);
+                if(currTime>max){
+                    max = currTime;
+                    ans = curr.get().getDeliveryTime2();
+                }
 
             }
 
         }
-        return max==0?"0":time.getTime(max);
+        return ans;
 
 
     }
