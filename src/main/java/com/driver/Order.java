@@ -9,7 +9,7 @@ public class Order {
     public Order(String id, String deliveryTime) {
         this.id=id;
         this.deliveryTime1=time.getTime(deliveryTime);
-        this.deliveryTime2=time.getTime(deliveryTime1);
+        this.deliveryTime2=deliveryTime;
 
            }
 

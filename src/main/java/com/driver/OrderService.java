@@ -80,8 +80,6 @@ public class OrderService {
     }
 
     public String getLastDeliveryTimeByPartnerId(String partnerId) throws NotFoundException{
-        Optional<DeliveryPartner> partner = dao.getPartner(partnerId);
-        if(partner.isEmpty())throw new NotFoundException("the requested entity is not found");
         List<String> orders = getOrdersByPartnerId(partnerId);
         int max = 0;
         String ans = null;
